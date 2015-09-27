@@ -1,4 +1,7 @@
-
 initial_data <- read.csv("data/league_data.csv")
 
-goal <- "How do accounts with numbers in their name differ from those who do not?"
+source("GetNewSummonerIDs.R")
+test <- GetNewSummonerIDs(initial_data, 10)
+
+source("GetSummonerIDsFromMatch.R")
+test2 <- GetSummonerIDsFromMatch("na", test[1,]$matchId)

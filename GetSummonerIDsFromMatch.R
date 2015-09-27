@@ -1,14 +1,12 @@
-source("CheckStatus.R")
-library(httr)
-library(jsonlite)
 
+source("CheckStatus.R")
 #Load API key
 api_key <- readLines(con <- file("key.txt", "r"), warn=FALSE)
 close(con)
 
-GetMatchListBySummoner <- function(region, summoner.id) {
+GetSummonerIDsFromMatch <- function(region, match.id) {
   url <- paste("https://", region, ".api.pvp.net/api/lol/", region, 
-               "/v2.2/matchlist/by-summoner/", summoner.id, "?api_key=", api_key, 
+               "/v2.2/match/", match.id, "?api_key=", api_key, 
                sep="")
   Sys.sleep(0.25)
   req <- GET(url)
@@ -16,8 +14,8 @@ GetMatchListBySummoner <- function(region, summoner.id) {
   ## Check status code for errors
   if (CheckStatus(req)) {
     data <- fromJSON(content(req, "text"))
-    
-    return(cbind(region, data[[1]]))
+    result <- data$participantIdentities$player$summonerId
+    return(result)
   }
   return(FALSE)
 }

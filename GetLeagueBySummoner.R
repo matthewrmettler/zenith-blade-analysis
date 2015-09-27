@@ -4,6 +4,10 @@ source("CheckStatus.R")
 library(httr)
 library(jsonlite)
 
+#Load API key
+api_key <- readLines(con <- file("key.txt", "r"))
+close(con)
+
 GetLeagueBySummoner <- function(region, summoner.id) {
   url <- paste("https://", region, ".api.pvp.net/api/lol/", region, 
                "/v2.5/league/by-summoner/", summoner.id, "?api_key=", api_key, 
