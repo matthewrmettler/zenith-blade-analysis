@@ -1,30 +1,49 @@
 # Returns a data frame containing the contents of the 'get league by summoner'
 # API call. Data frame also includes the tier and region of that call.
-source("CheckStatus.R")
-library(httr)
+source("MakeAPICall.R")
 library(jsonlite)
 
 #Load API key
-api_key <- readLines(con <- file("key.txt", "r"))
+api_key <- suppressWarnings(readLines(con <- file("key.txt", "r")))
 close(con)
 
-GetLeagueBySummoner <- function(region, summoner.id) {
+GetLeagueBySummoner <- function(region="na", summoner.id=0) {
   url <- paste("https://", region, ".api.pvp.net/api/lol/", region, 
                "/v2.5/league/by-summoner/", summoner.id, "?api_key=", api_key, 
                sep="")
-  req <- GET(url)
-  
+  Sys.sleep(0.01)
+  req = MakeAPICall(url);
   ## Check status code for errors
-  if (CheckStatus(req)) {
+  if (!is.null(req)) {
     raw_data <- fromJSON(content(req, "text"))
+    
     named_data <- raw_data[[1]]
     solo_q <- named_data[1,]
+    
     tier <- solo_q$tier
     entries <- solo_q$entries[[1]]
-    data <- cbind(entries, tier)
-    shuffled_data <- cbind(region, data[,1:2], data[,12], data[,3:10])
-    names(shuffled_data)[4] <- "tier"
+    key <- paste(region, entries[ , 1])
+    shuffled_data <- cbind(key, region, entries[ , 1:2], tier, entries[ , 3:10])
+    
+    ## Format columns and names
+    names(shuffled_data)[1] <- "key"
+    names(shuffled_data)[2] <- "region"
+    names(shuffled_data)[3] <- "playerId"
+    names(shuffled_data)[4] <- "playerName"
+    names(shuffled_data)[5] <- "tier"
+    
+    shuffled_data[ , 2] <- as.factor(shuffled_data[ , 2])
+    
+    shuffled_data[ , 7] <- as.numeric(as.character(shuffled_data[ , 7]))
+    shuffled_data[ , 8] <- as.numeric(as.character(shuffled_data[ , 8]))
+    shuffled_data[ , 9] <- as.numeric(as.character(shuffled_data[ , 9]))
+    
+    shuffled_data[ , 10] <- as.logical(shuffled_data[ , 10])
+    shuffled_data[ , 11] <- as.logical(shuffled_data[ , 11])
+    shuffled_data[ , 12] <- as.logical(shuffled_data[ , 12])
+    shuffled_data[ , 13] <- as.logical(shuffled_data[ , 13])
     rownames(shuffled_data) <- NULL
+    
     return(shuffled_data)
   }
   return(list())

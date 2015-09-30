@@ -1,7 +1,10 @@
-initial_data <- read.csv("data/league_data.csv")
-
 source("GetNewSummonerIDs.R")
-test <- GetNewSummonerIDs(initial_data, 10)
+source("AddLeagueData.R")
 
-source("GetSummonerIDsFromMatch.R")
-test2 <- GetSummonerIDsFromMatch("na", test[1,]$matchId)
+for (i in 1:2) {
+  message(paste("Iteration", 1))
+  initial_data <- read.csv("data/league_data.csv")
+  id <- GetNewSummonerIDs(initial_data, 10)
+  data <- AddLeagueData(initial_data, "na", id)
+  write.csv(data, "data/league_data.csv", row.names=FALSE)
+}
