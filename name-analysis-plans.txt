@@ -1,0 +1,12 @@
+
+An Analysis of Numbered Summoner Names
+-Look at the percentage of summoner names that contain numbers
+-Look at how usernames with numbers are distributed by league; how many are veterans; how many games they have played; versus non-numbered names
+-Look at the most popular numbers used by summoners
+-For the top x most popular numbers,  see their distribution by league, whether they are veterans, see what kinds of champions and roles they enjoy playing
+-(Maybe) Extrapolate from numbers like 80-00 ages of players based on birth year (ie, 91 might mean they were born in 1991). Gauge age distribution across leagues
+
+Other Future Ideas
+-Look at the distribution of username lengths
+-Look at how many names have spaces
+-(Hard) Look at what words are frequently used
