@@ -11,40 +11,38 @@ GetLeagueBySummoner <- function(region="na", summoner.id=0) {
   url <- paste("https://", region, ".api.pvp.net/api/lol/", region, 
                "/v2.5/league/by-summoner/", summoner.id, "?api_key=", api_key, 
                sep="")
-  Sys.sleep(0.01)
   req = MakeAPICall(url);
   ## Check status code for errors
   if (!is.null(req)) {
     raw_data <- fromJSON(content(req, "text"))
     
-    named_data <- raw_data[[1]]
-    solo_q <- named_data[1,]
+    solo_q <- raw_data[[1]][1,]
     
     tier <- solo_q$tier
     entries <- solo_q$entries[[1]]
     key <- paste(region, entries[ , 1])
-    shuffled_data <- cbind(key, region, entries[ , 1:2], tier, entries[ , 3:10])
+    data <- cbind(key, region, entries[ , 1:2], tier, entries[ , 3:10])
     
     ## Format columns and names
-    names(shuffled_data)[1] <- "key"
-    names(shuffled_data)[2] <- "region"
-    names(shuffled_data)[3] <- "playerId"
-    names(shuffled_data)[4] <- "playerName"
-    names(shuffled_data)[5] <- "tier"
+    names(data)[1] <- "key"
+    names(data)[2] <- "region"
+    names(data)[3] <- "playerId"
+    names(data)[4] <- "playerName"
+    names(data)[5] <- "tier"
     
-    shuffled_data[ , 2] <- as.factor(shuffled_data[ , 2])
+    data[ , 2] <- as.factor(data[ , 2])
     
-    shuffled_data[ , 7] <- as.numeric(as.character(shuffled_data[ , 7]))
-    shuffled_data[ , 8] <- as.numeric(as.character(shuffled_data[ , 8]))
-    shuffled_data[ , 9] <- as.numeric(as.character(shuffled_data[ , 9]))
+    data[ , 7] <- as.numeric(as.character(data[ , 7]))
+    data[ , 8] <- as.numeric(as.character(data[ , 8]))
+    data[ , 9] <- as.numeric(as.character(data[ , 9]))
     
-    shuffled_data[ , 10] <- as.logical(shuffled_data[ , 10])
-    shuffled_data[ , 11] <- as.logical(shuffled_data[ , 11])
-    shuffled_data[ , 12] <- as.logical(shuffled_data[ , 12])
-    shuffled_data[ , 13] <- as.logical(shuffled_data[ , 13])
-    rownames(shuffled_data) <- NULL
+    data[ , 10] <- as.logical(data[ , 10])
+    data[ , 11] <- as.logical(data[ , 11])
+    data[ , 12] <- as.logical(data[ , 12])
+    data[ , 13] <- as.logical(data[ , 13])
+    rownames(data) <- NULL
     
-    return(shuffled_data)
+    return(data)
   }
-  return(list())
+  return(c())
 }

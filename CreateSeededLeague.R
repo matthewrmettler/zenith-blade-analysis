@@ -2,7 +2,7 @@
 source("GetLeagueBySummoner.R")
 
 #Load API key
-api_key <- readLines(con <- file("key.txt", "r"))
+api_key <- suppressWarnings(readLines(con <- file("key.txt", "r")))
 close(con)
 
 CreateSeededLeague <- function() {
@@ -22,3 +22,5 @@ CreateSeededLeague <- function() {
   }
   write.csv(league.table, "data/league_data.csv", row.names=FALSE)
 }
+
+CreateSeededLeague()

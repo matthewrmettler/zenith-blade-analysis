@@ -1,11 +1,12 @@
 
 source("GetLeagueBySummoner.R")
-AddLeagueData <- function(data, region="na", ids) {
-  result <- data
+AddLeagueData <- function(data, region="na", ids, size) {
+  ids <- sample(ids, size=size)
+  result <- c()
   for(i in ids) {
     result <- rbind(result, GetLeagueBySummoner(region, i))
-    Sys.sleep(0.01)
   }
+  result <- rbind(data, result)
   result <- result[match(unique(result$key),result$key), ]
   result
 }
