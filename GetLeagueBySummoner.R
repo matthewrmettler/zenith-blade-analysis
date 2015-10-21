@@ -16,8 +16,16 @@ GetLeagueBySummoner <- function(region="na", summoner.id=0) {
   if (!is.null(req)) {
     raw_data <- fromJSON(content(req, "text"))
     
-    solo_q <- raw_data[[1]][1,]
-    
+    temp <- raw_data[[1]]
+    for (q in 1:nrow(temp)) {
+      if (as.character(temp[q,]$queue) == "RANKED_SOLO_5x5") {
+        #print(q)
+        solo_q <- temp[q, ]
+      }
+    }
+    if (!exists("solo_q")) {
+      return(c())
+    }
     tier <- solo_q$tier
     entries <- solo_q$entries[[1]]
     key <- paste(region, entries[ , 1])
